@@ -12,19 +12,8 @@ import os
 
 app = Flask(__name__)
 
-# Secure connection to DB without hardcoding credentials
-db_user = os.getenv("DB_USER", "root")
-db_password = os.getenv("DB_PASSWORD", "")
-db_host = os.getenv("DB_HOST", "localhost")
-db_port = os.getenv("DB_PORT", "3306")
-db_name = os.getenv("DB_NAME", "ecommerce_api")
-
-if db_password:
-    default_db_uri = f"mysql+mysqlconnector://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-else:
-    default_db_uri = f"mysql+mysqlconnector://{db_user}@{db_host}:{db_port}/{db_name}"
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", default_db_uri)
+# Database connection (hardcoded credentials)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Harryp24!@localhost/ecommerce_api'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #Creating Base Model
