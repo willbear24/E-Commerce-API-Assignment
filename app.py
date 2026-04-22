@@ -12,6 +12,7 @@ import os
 
 app = Flask(__name__)
 
+# Secure connection to DB without hardcoding credentials
 db_user = os.getenv("DB_USER", "root")
 db_password = os.getenv("DB_PASSWORD", "")
 db_host = os.getenv("DB_HOST", "localhost")
@@ -26,13 +27,18 @@ else:
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", default_db_uri)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+#Creating Base Model
 class Base(DeclarativeBase):
     pass
 
+# Initializing SQLAlchemy and Marshmallow
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 ma = Marshmallow(app)
 
+#============= Models/Tables ================
+
+#Relationship Table for Orders and Products
 order_product = Table(
     "order_product",
     Base.metadata,
@@ -99,7 +105,7 @@ orders_schema = OrderSchema(many=True)
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
 
-
+# Commit current transaction; rollback and return a 409 response on DB integrity conflicts.
 def commit_or_rollback():
     try:
         db.session.commit()
